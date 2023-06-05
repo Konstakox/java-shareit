@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 class UserServiceImpl implements UserService {
-    private final UserRepository UserRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<User> allUsers = UserRepository.getAllUsers();
+        List<User> allUsers = userRepository.getAllUsers();
         return allUsers.stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
@@ -25,14 +25,14 @@ class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         User newUser = UserMapper.toUser(userDto);
-        newUser = UserRepository.createUser(newUser);
+        newUser = userRepository.createUser(newUser);
 
         return UserMapper.toUserDto(newUser);
     }
 
     @Override
     public UserDto getUser(Integer userId) {
-        User user = UserRepository.getUser(userId);
+        User user = userRepository.getUser(userId);
         if (user == null) {
             throw new NotFoundException("Пользователь не найден ID: " + userId);
         }
@@ -41,17 +41,17 @@ class UserServiceImpl implements UserService {
 
     @Override
     public User deleteUser(Integer userId) {
-        return UserRepository.deleteUser(userId);
+        return userRepository.deleteUser(userId);
     }
 
     @Override
     public UserDto updateUser(Integer userId, UserDto userDto) {
-        User user = UserRepository.getUser(userId);
+        User user = userRepository.getUser(userId);
         if (user == null) {
             throw new NotFoundException("Пользователь не найден ID: " + userId);
         }
         if (userDto.getEmail() != null) {
-            Boolean existUser = UserRepository.existUserWithEmail(userDto.getEmail());
+            Boolean existUser = userRepository.existUserWithEmail(userDto.getEmail());
             if (existUser && !user.getEmail().equals(userDto.getEmail())) {
                 throw new AlreadyExistsException("Пользователь с таким email уже существует, email: " + userDto.getEmail());
             } else {
@@ -61,7 +61,7 @@ class UserServiceImpl implements UserService {
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
         }
-        user = UserRepository.updateUser(user);
+        user = userRepository.updateUser(user);
         return UserMapper.toUserDto(user);
     }
 }

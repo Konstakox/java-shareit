@@ -1,17 +1,16 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class ItemDto {
     @Null(groups = MarkerItemDto.OnCreate.class)
     private Integer id;

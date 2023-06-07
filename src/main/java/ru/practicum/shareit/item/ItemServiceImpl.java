@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
@@ -23,6 +25,7 @@ public class ItemServiceImpl implements ItemService {
         Item newItem = ItemMapper.toItem(userId, itemDto);
         newItem = itemRepository.addItem(newItem);
         itemDto = ItemMapper.toItemDto(newItem);
+        log.info("Успешное создание вещи {}", itemDto);
 
         return itemDto;
     }
@@ -33,6 +36,7 @@ public class ItemServiceImpl implements ItemService {
         if (item == null) {
             throw new NotFoundException(String.format("Вещь с ID %s не найдена", itemId));
         }
+        log.info("Вещь найдена, id {}", item.getId());
 
         return ItemMapper.toItemDto(item);
     }
@@ -40,6 +44,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getItemOwner(Integer userId) {
         List<Item> itemOwner = itemRepository.getItemOwner(userId);
+        log.info("Вещи пользователя {} найдены", userId);
 
         return itemOwner.stream()
                 .map(ItemMapper::toItemDto)
@@ -50,6 +55,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(Integer userId, Integer itemId, ItemDto itemDto) {
         Item item = itemRepository.getItem(itemId);
         if (!userId.equals(item.getOwner())) {
+            log.info("У пользователя с id {} не найдена вещь с id {} ", userId ,itemDto);
             throw new NotFoundException("У вас нет вещи с ID:" + itemId);
         }
 
@@ -65,6 +71,7 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(itemDto.getAvailable());
         }
         item = itemRepository.updateItem(item);
+        log.info("Вещь с id {} изменена", itemId);
 
         return ItemMapper.toItemDto(item);
     }
@@ -75,6 +82,8 @@ public class ItemServiceImpl implements ItemService {
             return Collections.emptyList();
         }
         List<Item> findItems = itemRepository.searchItems(text);
+        log.info("Вещь по тексту {} найдена", text);
+
         return findItems.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());

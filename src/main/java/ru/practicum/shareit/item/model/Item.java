@@ -1,16 +1,35 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Data
 @Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "items")
 public class Item {
+    @Id
+    @Column(name = "item_id", nullable = false, length = Integer.MAX_VALUE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
-    private String description;
-    private Boolean available;
-    private Integer owner;
-    private Integer request;
 
+    @Column(name = "item_name", nullable = false, length = 64)
+    private String name;
+
+    @Column(nullable = false, length = 256)
+    private String description;
+
+    @Column(nullable = false)
+    private Boolean available = true;
+
+    @Column(nullable = false)
+    private Integer owner;
+
+    private Integer request;
 }

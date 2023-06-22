@@ -3,10 +3,12 @@ package ru.practicum.shareit.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.booking.dto.BookingDtoGivenWithBookerId;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,5 +23,9 @@ public class ItemDto {
     @NotNull(groups = MarkerItemDto.OnCreate.class)
     private Boolean available;
     private Integer request;
-
+    BookingDtoGivenWithBookerId nextBooking = null;
+    BookingDtoGivenWithBookerId lastBooking = null;
+    List<CommentDto> comments;
 }
+
+

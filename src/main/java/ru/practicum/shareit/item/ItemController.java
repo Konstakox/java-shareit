@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.MarkerCommentDto;
 import ru.practicum.shareit.item.dto.MarkerItemDto;
 
 import javax.validation.constraints.Positive;
@@ -15,6 +17,7 @@ import static ru.practicum.shareit.constantsShareit.Constants.Headers.USER_ID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
@@ -28,9 +31,10 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable @Positive Integer itemId) {
+    public ItemDto getItem(@RequestHeader(USER_ID) Integer userId,
+                           @PathVariable @Positive Integer itemId) {
         log.info("Запрос вещи по id {}", itemId);
-        return itemService.getItem(itemId);
+        return itemService.getItem(userId, itemId);
     }
 
     @GetMapping
@@ -53,5 +57,13 @@ public class ItemController {
         log.info("Поиск вещи по тексту {}", text);
 
         return itemService.searchItems(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto comment(@RequestHeader(USER_ID) Integer userId,
+                              @RequestBody @Validated(MarkerCommentDto.OnCreate.class) CommentDto commentDto,
+                              @PathVariable @Positive Integer itemId) {
+        log.info("Запрос пользователя {} на создание коментария {} к вещи {}", userId, commentDto, itemId);
+        return itemService.addComment(userId, itemId, commentDto);
     }
 }

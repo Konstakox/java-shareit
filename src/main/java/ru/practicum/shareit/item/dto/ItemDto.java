@@ -23,8 +23,8 @@ public class ItemDto {
     @NotNull(groups = MarkerItemDto.OnCreate.class)
     private Boolean available;
     private Integer request;
-    BookingDtoGivenWithBookerId nextBooking = null;
-    BookingDtoGivenWithBookerId lastBooking = null;
+    BookingDtoGivenWithBookerId nextBooking;
+    BookingDtoGivenWithBookerId lastBooking;
     List<CommentDto> comments;
 }
 

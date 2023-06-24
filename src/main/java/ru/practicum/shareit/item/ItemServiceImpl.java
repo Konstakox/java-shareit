@@ -64,14 +64,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItemOwner(Integer userId) {
+
         List<Item> itemOwner = itemRepository.findAllItemByOwner(userId);
-        log.info("Вещи пользователя {} найдены", userId);
+
+        List<Booking> bookingItemOwner = bookingRepository.findAllByItemInAndStatusOrderByStart(itemOwner, StatusBooking.APPROVED);
 
         return itemOwner.stream()
                 .map(ItemMapper::toItemDto)
-                .peek(itemDto -> itemDto.setNextBooking(getNextBooking(itemDto.getId())))
-                .peek(itemDto -> itemDto.setLastBooking(getLastBooking(itemDto.getId())))
-                .sorted(Comparator.comparing(ItemDto::getId))
+                .peek(itemDto -> itemDto.setNextBooking(getNextBookingOwner(itemDto.getId(), bookingItemOwner)))
+                .peek(itemDto -> itemDto.setLastBooking(getLastBookingOwner(itemDto.getId(), bookingItemOwner)))
                 .collect(Collectors.toList());
     }
 
@@ -153,13 +154,32 @@ public class ItemServiceImpl implements ItemService {
                 .min(Comparator.comparing(Booking::getStart))
                 .map(BookingMapper::toBookingDtoGivenWithBookerId)
                 .orElse(null);
+    }
 
+    private BookingDtoGivenWithBookerId getNextBookingOwner(Integer itemDtoId, List<Booking> bookingItemOwner) {
+        return bookingItemOwner
+                .stream()
+                .filter(booking -> booking.getItem().getId().equals(itemDtoId))
+                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                .min(Comparator.comparing(Booking::getStart))
+                .map(BookingMapper::toBookingDtoGivenWithBookerId)
+                .orElse(null);
     }
 
     private BookingDtoGivenWithBookerId getLastBooking(Integer itemId) {
         return bookingRepository.findByItem_IdOrderByStartAsc(itemId)
                 .stream()
                 .filter(booking -> booking.getStatus().equals(StatusBooking.APPROVED))
+                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
+                .max(Comparator.comparing(Booking::getEnd))
+                .map(BookingMapper::toBookingDtoGivenWithBookerId)
+                .orElse(null);
+    }
+
+    private BookingDtoGivenWithBookerId getLastBookingOwner(Integer itemDtoId, List<Booking> bookingItemOwner) {
+        return bookingItemOwner
+                .stream()
+                .filter(booking -> booking.getItem().getId().equals(itemDtoId))
                 .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
                 .max(Comparator.comparing(Booking::getEnd))
                 .map(BookingMapper::toBookingDtoGivenWithBookerId)

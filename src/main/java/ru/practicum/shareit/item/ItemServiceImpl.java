@@ -69,10 +69,16 @@ public class ItemServiceImpl implements ItemService {
 
         List<Booking> bookingItemOwner = bookingRepository.findAllByItemInAndStatusOrderByStart(itemOwner, StatusBooking.APPROVED);
 
+        List<Comment> commentItemOwner = commentRepository.findAllByItemInOrderByCreatedDesc(itemOwner);
+
         return itemOwner.stream()
                 .map(ItemMapper::toItemDto)
                 .peek(itemDto -> itemDto.setNextBooking(getNextBookingOwner(itemDto.getId(), bookingItemOwner)))
                 .peek(itemDto -> itemDto.setLastBooking(getLastBookingOwner(itemDto.getId(), bookingItemOwner)))
+                .peek(itemDto -> itemDto.setComments(commentItemOwner.stream()
+                        .filter(comment -> comment.getItem().getId().equals(itemDto.getId()))
+                        .map(CommentMapper::toCommentDto)
+                        .collect(Collectors.toList())))
                 .collect(Collectors.toList());
     }
 

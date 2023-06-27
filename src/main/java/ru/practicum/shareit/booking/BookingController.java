@@ -9,6 +9,7 @@ import ru.practicum.shareit.booking.dto.BookingDtoIncoming;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 import static ru.practicum.shareit.constantsShareit.Constants.Headers.USER_ID;
@@ -46,17 +47,21 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoGiven> getAllBookingsUser(@RequestHeader(USER_ID) Integer userId,
-                                                    @RequestParam(required = false, defaultValue = "ALL") String state) {
+                                                    @RequestParam(required = false, defaultValue = "ALL") String state,
+                                                    @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                    @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         log.info("@Get /bookings getAllBookingsUser Запрос бронирований пользователем {} " +
                 "бронирований со статусом {}", userId, state);
-        return bookingService.getAllBookingsUser(userId, state);
+        return bookingService.getAllBookingsUser(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoGiven> getAllBookingsItemsUser(@RequestHeader(USER_ID) Integer userId,
-                                                         @RequestParam(required = false, defaultValue = "ALL") String state) {
+                                                         @RequestParam(required = false, defaultValue = "ALL") String state,
+                                                         @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                                         @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         log.info("@Get /bookings/owner getAllBookingsUser Запрос бронирований пользователем {} " +
                 "ВЕЩЕЙ бронированя со статусом {}", userId, state);
-        return bookingService.getAllBookingsItemsUser(userId, state);
+        return bookingService.getAllBookingsItemsUser(userId, state, from, size);
     }
 }

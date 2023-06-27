@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.MarkerUserDto;
@@ -18,28 +19,28 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         log.info("Запрос всех пользователей");
-        return userService.getAllUsers();
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping
-    public UserDto createUser(@Validated(MarkerUserDto.OnCreate.class) @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Validated(MarkerUserDto.OnCreate.class) @RequestBody UserDto userDto) {
         log.info("Запрос на создание пользователя {} ", userDto);
-        return userService.createUser(userDto);
+        return ResponseEntity.ok(userService.createUser(userDto));
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable @Positive Integer userId) {
+    public ResponseEntity<UserDto> getUser(@PathVariable @Positive Integer userId) {
         log.info("Запрос пользователя по id {} ", userId);
-        return userService.getUser(userId);
+        return ResponseEntity.ok(userService.getUser(userId));
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable @Positive Integer userId,
-                              @RequestBody @Validated(MarkerUserDto.OnUpdate.class) UserDto userDto) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable @Positive Integer userId,
+                                              @RequestBody @Validated(MarkerUserDto.OnUpdate.class) UserDto userDto) {
         log.info("Запрос изменения пользователя с id {}, изменение {}", userId, userDto);
-        return userService.updateUser(userId, userDto);
+        return ResponseEntity.ok(userService.updateUser(userId, userDto));
     }
 
     @DeleteMapping("/{userId}")

@@ -10,6 +10,7 @@ import ru.practicum.shareit.item.dto.MarkerCommentDto;
 import ru.practicum.shareit.item.dto.MarkerItemDto;
 
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 import static ru.practicum.shareit.constantsShareit.Constants.Headers.USER_ID;
@@ -38,9 +39,11 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getItemOwner(@RequestHeader(USER_ID) Integer userId) {
+    public List<ItemDto> getItemOwner(@RequestHeader(USER_ID) Integer userId,
+                                      @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                      @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         log.info("Запрос пользователя {} всех его вещей", userId);
-        return itemService.getItemOwner(userId);
+        return itemService.getItemOwner(userId, from, size);
     }
 
     @PatchMapping("/{itemId}")
@@ -53,10 +56,12 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam(name = "text") String text) {
+    public List<ItemDto> searchItems(@RequestParam(name = "text") String text,
+                                     @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                     @RequestParam(name = "size", defaultValue = "10") @Positive Integer size) {
         log.info("Поиск вещи по тексту {}", text);
 
-        return itemService.searchItems(text);
+        return itemService.searchItems(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

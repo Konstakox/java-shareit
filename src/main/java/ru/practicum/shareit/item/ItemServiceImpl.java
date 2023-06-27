@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
@@ -14,6 +15,8 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
@@ -33,11 +36,25 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final BookingRepository bookingRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public ItemDto addItem(Integer userId, ItemDto itemDto) {
         userService.getUser(userId);
+
         Item newItem = ItemMapper.toItem(userId, itemDto);
+        log.info("Сервис itemDto {} to newItem {}", itemDto, newItem);
+
+
+//         itemRequest = new ItemRequest();
+        if (itemDto.getRequestId() != null) {
+            ItemDto finalItemDto = itemDto;
+            ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new MyNotFoundException("Запрос вещи(Request) не найден, ID" + finalItemDto.getRequestId()));
+
+            newItem.setRequest(itemRequest);
+            log.info("Сохранение Request в newItem {}", newItem);
+        }
         newItem = itemRepository.save(newItem);
         itemDto = ItemMapper.toItemDto(newItem);
         log.info("Успешное создание вещи {}", itemDto);
@@ -63,28 +80,33 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemOwner(Integer userId) {
+    public List<ItemDto> getItemOwner(Integer userId, Integer from, Integer size) {
+        log.info("Сервис getItemOwner начало");
 
-        List<Item> itemOwner = itemRepository.findAllItemByOwner(userId);
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
 
-        List<Booking> bookingItemOwner = bookingRepository.findAllByItemInAndStatusOrderByStart(itemOwner, StatusBooking.APPROVED);
+        List<Item> itemOwner = itemRepository.findAllItemByOwnerOrderById(userId, page);
+        log.info("Получил List<Item> findAllItemByOwner {}", itemOwner);
+
+        List<Booking> bookingItemOwner = bookingRepository.findAllByItemInAndStatusOrderByStartAsc(itemOwner, StatusBooking.APPROVED);
+        log.info("Получил List<Booking> findAllByItemInAndStatusOrderByStart {}", bookingItemOwner);
 
         List<Comment> commentItemOwner = commentRepository.findAllByItemInOrderByCreatedDesc(itemOwner);
+        log.info("Получил List<Comment> findAllByItemInOrderByCreatedDesc {}", commentItemOwner);
 
         return itemOwner.stream()
                 .map(ItemMapper::toItemDto)
                 .peek(itemDto -> itemDto.setNextBooking(getNextBookingOwner(itemDto.getId(), bookingItemOwner)))
                 .peek(itemDto -> itemDto.setLastBooking(getLastBookingOwner(itemDto.getId(), bookingItemOwner)))
-                .peek(itemDto -> itemDto.setComments(commentItemOwner.stream()
-                        .filter(comment -> comment.getItem().getId().equals(itemDto.getId()))
-                        .map(CommentMapper::toCommentDto)
-                        .collect(Collectors.toList())))
+                .peek(itemDto -> itemDto.setComments(getCommentItemOwner(itemDto.getId(), commentItemOwner)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ItemDto updateItem(Integer userId, Integer itemId, ItemDto itemDto) {
-        Item item = itemRepository.getReferenceById(itemId);
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new MyNotFoundException("Вещь не найдена ID " + itemId));
+
         if (!userId.equals(item.getOwner())) {
             log.info("У пользователя с id {} не найдена вещь с id {} ", userId, itemDto);
             throw new MyNotFoundException("У вас нет вещи с ID:" + itemId);
@@ -108,11 +130,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItems(String text) {
+    public List<ItemDto> searchItems(String text, Integer from, Integer size) {
         if (text == null || text.isBlank()) {
             return Collections.emptyList();
         }
-        List<Item> findItems = itemRepository.searchItems(text);
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        List<Item> findItems = itemRepository.searchItems(text, page);
         log.info("Вещь по тексту {} найдена", text);
 
         return findItems.stream()
@@ -163,6 +186,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private BookingDtoGivenWithBookerId getNextBookingOwner(Integer itemDtoId, List<Booking> bookingItemOwner) {
+        log.info("Начал работать getNextBookingOwner");
         return bookingItemOwner
                 .stream()
                 .filter(booking -> booking.getItem().getId().equals(itemDtoId))
@@ -183,6 +207,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private BookingDtoGivenWithBookerId getLastBookingOwner(Integer itemDtoId, List<Booking> bookingItemOwner) {
+        log.info("Начал работать getLastBookingOwner");
+
         return bookingItemOwner
                 .stream()
                 .filter(booking -> booking.getItem().getId().equals(itemDtoId))
@@ -195,6 +221,15 @@ public class ItemServiceImpl implements ItemService {
     private List<CommentDto> getComments(Integer itemId) {
         List<Comment> comments = commentRepository.findAllByItem_Id(itemId);
         return comments.stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList());
+    }
+
+    private List<CommentDto> getCommentItemOwner(Integer itemDtoId, List<Comment> commentItemOwner) {
+        log.info("Начал работать getCommentItemOwner");
+        return commentItemOwner
+                .stream()
+                .filter(comment -> comment.getItem().getId().equals(itemDtoId))
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
     }

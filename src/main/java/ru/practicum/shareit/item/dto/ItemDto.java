@@ -22,7 +22,7 @@ public class ItemDto {
     private String description;
     @NotNull(groups = MarkerItemDto.OnCreate.class)
     private Boolean available;
-    private Integer request;
+    private Integer requestId;
     BookingDtoGivenWithBookerId nextBooking;
     BookingDtoGivenWithBookerId lastBooking;
     List<CommentDto> comments;

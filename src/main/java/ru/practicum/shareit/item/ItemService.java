@@ -10,11 +10,11 @@ public interface ItemService {
 
     ItemDto getItem(Integer userId, Integer itemId);
 
-    List<ItemDto> getItemOwner(Integer userId);
+    List<ItemDto> getItemOwner(Integer userId, Integer from, Integer size);
 
     ItemDto updateItem(Integer userId, Integer itemId, ItemDto itemDto);
 
-    List<ItemDto> searchItems(String text);
+    List<ItemDto> searchItems(String text, Integer from, Integer size);
 
     CommentDto addComment(Integer userId, Integer itemId, CommentDto commentDto);
 }

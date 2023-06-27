@@ -45,8 +45,6 @@ public class ItemServiceImpl implements ItemService {
         Item newItem = ItemMapper.toItem(userId, itemDto);
         log.info("Сервис itemDto {} to newItem {}", itemDto, newItem);
 
-
-//         itemRequest = new ItemRequest();
         if (itemDto.getRequestId() != null) {
             ItemDto finalItemDto = itemDto;
             ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId())

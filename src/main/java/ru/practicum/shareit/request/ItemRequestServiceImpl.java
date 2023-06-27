@@ -51,17 +51,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequestor(user);
         List<Item> itemsOnRequest = itemRepository.findByRequestIn(itemRequests);
 
-        return ItemRequestDtoSetItem(itemRequests,itemsOnRequest);
-
-//        return itemRequests.stream()
-//                .map(ItemRequestMapper::toItemRequestDtoWithItem)
-//                .peek(itemRequestDtoWithItem -> itemRequestDtoWithItem.setItems(
-//                        itemsOnRequest.stream()
-//                                .filter(item -> item.getRequest().getId().equals(itemRequestDtoWithItem.getId()))
-//                                .map(ItemMapper::toItemDto)
-//                                .collect(Collectors.toList())))
-//                .sorted(Comparator.comparing(ItemRequestDtoWithItem::getCreated))
-//                .collect(Collectors.toList());
+        return ItemRequestDtoSetItem(itemRequests, itemsOnRequest);
     }
 
     @Override
@@ -78,11 +68,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequestorIsNotOrderByCreatedDesc(user, page);
         List<Item> itemsOnRequest = itemRepository.findByRequestIn(itemRequests);
 
-        return ItemRequestDtoSetItem(itemRequests,itemsOnRequest);
-
-//        return itemRequestRepository.findAllByRequestorIsNotOrderByCreatedDesc(user, page).stream()
-//                .map(ItemRequestMapper::toItemRequestDto)
-//                .collect(Collectors.toList());
+        return ItemRequestDtoSetItem(itemRequests, itemsOnRequest);
     }
 
     private List<ItemRequestDtoWithItem> ItemRequestDtoSetItem(List<ItemRequest> itemRequests, List<Item> itemsOnRequest) {
@@ -111,7 +97,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         itemRequestDtoWithItem.setItems(items.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList()));
-
 
         return itemRequestDtoWithItem;
     }

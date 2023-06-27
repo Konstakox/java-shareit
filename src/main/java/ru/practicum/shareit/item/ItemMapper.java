@@ -21,8 +21,6 @@ public class ItemMapper {
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
                 .owner(userId)
-//                .request(itemRequest)
-//                .request(itemDto.getRequest() != null ? itemRequest : null)
                 .build();
     }
 }

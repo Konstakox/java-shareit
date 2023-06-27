@@ -29,8 +29,6 @@ public class Item {
     @Column(nullable = false)
     private Boolean available = true;
 
-//    @ManyToOne
-//    @JoinColumn(name = "owner", nullable = false)
     @Column(name = "owner", nullable = false)
     private Integer owner;
 

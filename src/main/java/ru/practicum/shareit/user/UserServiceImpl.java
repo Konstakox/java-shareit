@@ -26,8 +26,8 @@ class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User newUser = UserMapper.toUser(userDto);
-        newUser = userRepository.save(newUser);
+//        User newUser = UserMapper.toUser(userDto);
+        User newUser = userRepository.save(UserMapper.toUser(userDto));
         log.info("Пользователь создан с id {} ", newUser.getId());
 
         return UserMapper.toUserDto(newUser);
@@ -52,7 +52,8 @@ class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(Integer userId, UserDto userDto) {
-        User user = userRepository.getReferenceById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new MyNotFoundException("Пользователь не найден ID: " + userId));
         if (userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail());
         }

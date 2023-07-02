@@ -1,5 +1,7 @@
 package ru.practicum.shareit.request.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +21,6 @@ public class ItemRequestDto {
     private String description;
     private User requestor;
     @FutureOrPresent
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime created;
 }

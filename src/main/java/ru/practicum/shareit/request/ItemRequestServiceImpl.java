@@ -51,7 +51,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequestor(user);
         List<Item> itemsOnRequest = itemRepository.findByRequestIn(itemRequests);
 
-        return ItemRequestDtoSetItem(itemRequests, itemsOnRequest);
+        return itemRequestDtoSetItem(itemRequests, itemsOnRequest);
     }
 
     @Override
@@ -68,10 +68,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<ItemRequest> itemRequests = itemRequestRepository.findAllByRequestorIsNotOrderByCreatedDesc(user, page);
         List<Item> itemsOnRequest = itemRepository.findByRequestIn(itemRequests);
 
-        return ItemRequestDtoSetItem(itemRequests, itemsOnRequest);
+        return itemRequestDtoSetItem(itemRequests, itemsOnRequest);
     }
 
-    private List<ItemRequestDtoWithItem> ItemRequestDtoSetItem(List<ItemRequest> itemRequests, List<Item> itemsOnRequest) {
+    private List<ItemRequestDtoWithItem> itemRequestDtoSetItem(List<ItemRequest> itemRequests, List<Item> itemsOnRequest) {
         return itemRequests.stream()
                 .map(ItemRequestMapper::toItemRequestDtoWithItem)
                 .peek(itemRequestDtoWithItem -> itemRequestDtoWithItem.setItems(

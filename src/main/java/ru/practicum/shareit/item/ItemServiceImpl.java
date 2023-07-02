@@ -40,7 +40,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto addItem(Integer userId, ItemDto itemDto) {
-        userService.getUser(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new MyNotFoundException("Пользователь не найден ID: " + userId));
 
         Item newItem = ItemMapper.toItem(userId, itemDto);
         log.info("Сервис itemDto {} to newItem {}", itemDto, newItem);

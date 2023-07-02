@@ -12,7 +12,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-import static ru.practicum.shareit.constantsShareit.Constants.Headers.USER_ID;
+import static ru.practicum.shareit.constantsShareit.Constants.USER_ID;
 
 @RestController
 @Slf4j

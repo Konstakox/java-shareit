@@ -21,6 +21,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final ItemRequestRepository itemRequestRepository;
 
+    @Transactional
     @Override
     public ItemDto addItem(Integer userId, ItemDto itemDto) {
         User user = userRepository.findById(userId)
@@ -101,6 +103,7 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public ItemDto updateItem(Integer userId, Integer itemId, ItemDto itemDto) {
         Item item = itemRepository.findById(itemId)
@@ -142,6 +145,7 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public CommentDto addComment(Integer userId, Integer itemId, CommentDto commentDto) {
         log.info("Сервис addComment userId {}, itemId {}, commentDto {}", userId, itemId, commentDto);

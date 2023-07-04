@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.MyNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,9 +25,9 @@ class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public UserDto createUser(UserDto userDto) {
-//        User newUser = UserMapper.toUser(userDto);
         User newUser = userRepository.save(UserMapper.toUser(userDto));
         log.info("Пользователь создан с id {} ", newUser.getId());
 
@@ -50,6 +51,7 @@ class UserServiceImpl implements UserService {
         log.info("Запрос на удаление пользователя с id {} выполнен", userId);
     }
 
+    @Transactional
     @Override
     public UserDto updateUser(Integer userId, UserDto userDto) {
         User user = userRepository.findById(userId)

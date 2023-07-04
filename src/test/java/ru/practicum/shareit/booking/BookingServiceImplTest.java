@@ -35,7 +35,7 @@ class BookingServiceImplTest {
     @Mock
     private BookingRepository bookingRepository;
     @InjectMocks
-    BookingServiceImpl bookingServiceImpl;
+    private BookingServiceImpl bookingServiceImpl;
 
     private final Integer userId1 = 1;
     private final Integer userId2 = 2;

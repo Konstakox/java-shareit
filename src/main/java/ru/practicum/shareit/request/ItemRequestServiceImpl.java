@@ -13,6 +13,7 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoWithItem;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +27,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional
     @Override
     public ItemRequestDto addItemRequest(Integer userId, ItemRequestDto itemRequestDto) {
         log.info("Сервис addItemRequest начал userId {} itemRequestDto {}", userId, itemRequestDto);

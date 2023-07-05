@@ -15,7 +15,7 @@ public class ItemJsonTest {
     @Autowired
     private JacksonTester<ItemDto> jsonItemDto;
 
-    ItemDto itemDto = ItemDto.builder()
+    private ItemDto itemDto = ItemDto.builder()
             .id(1)
             .name("name")
             .description("description")

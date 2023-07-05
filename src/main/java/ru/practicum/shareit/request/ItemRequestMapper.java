@@ -6,7 +6,7 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoWithItem;
 
 @UtilityClass
 public class ItemRequestMapper {
-    public static ItemRequestDtoWithItem toItemRequestDtoWithItem(ItemRequest itemRequest) {
+    public ItemRequestDtoWithItem toItemRequestDtoWithItem(ItemRequest itemRequest) {
         return ItemRequestDtoWithItem.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())
@@ -15,7 +15,7 @@ public class ItemRequestMapper {
                 .build();
     }
 
-    public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
+    public ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
         return ItemRequest.builder()
                 .description(itemRequestDto.getDescription())
                 .requestor(itemRequestDto.getRequestor())
@@ -23,7 +23,7 @@ public class ItemRequestMapper {
                 .build();
     }
 
-    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
+    public ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
         return ItemRequestDto.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())

@@ -1,10 +1,12 @@
 package ru.practicum.shareit.user;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.user.dto.UserDto;
 
+@UtilityClass
 public class UserMapper {
 
-    public static UserDto toUserDto(User user) {
+    public UserDto toUserDto(User user) {
 
         return UserDto.builder()
                 .id(user.getId())
@@ -13,7 +15,7 @@ public class UserMapper {
                 .build();
     }
 
-    public static User toUser(UserDto userDto) {
+    public User toUser(UserDto userDto) {
 
         return User.builder()
                 .name(userDto.getName())

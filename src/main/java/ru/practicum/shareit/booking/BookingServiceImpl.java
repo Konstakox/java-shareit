@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDtoGiven;
 import ru.practicum.shareit.booking.dto.BookingDtoIncoming;
@@ -13,6 +14,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional
     @Override
     public BookingDtoGiven addBooking(Integer userId, BookingDtoIncoming bookingDtoIncoming) {
         log.info("Добавление нового бронирования addBooking:");
@@ -61,6 +64,7 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.toBookingDtoGiven(newBooking);
     }
 
+    @Transactional
     @Override
     public BookingDtoGiven approvOrRejectBooking(Integer userId, Integer bookingId, String approved) {
         if (!(approved.equalsIgnoreCase("true") || approved.equalsIgnoreCase("false"))) {
@@ -126,7 +130,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoGiven> getAllBookingsUser(Integer userId, String state) {
+    public List<BookingDtoGiven> getAllBookingsUser(Integer userId, String state, Integer from, Integer size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new MyNotFoundException("Пользователь не найден ID: " + userId));
 
@@ -134,24 +138,26 @@ public class BookingServiceImpl implements BookingService {
         state = state.toUpperCase().trim();
         LocalDateTime now = LocalDateTime.now();
 
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+
         switch (state) {
             case "ALL":
-                bookings = bookingRepository.findByBookerIdOrderByEndDesc(userId);
+                bookings = bookingRepository.findByBookerIdOrderByEndDesc(userId, page);
                 break;
             case "CURRENT":
-                bookings = bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStart(userId, now, now);
+                bookings = bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStart(userId, now, now, page);
                 break;
             case "PAST":
-                bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByEndDesc(userId, now);
+                bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByEndDesc(userId, now, page);
                 break;
             case "FUTURE":
-                bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByEndDesc(userId, now);
+                bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByEndDesc(userId, now, page);
                 break;
             case "WAITING":
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByEndDesc(userId, StatusBooking.WAITING);
+                bookings = bookingRepository.findByBookerIdAndStatusOrderByEndDesc(userId, StatusBooking.WAITING, page);
                 break;
             case "REJECTED":
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByEndDesc(userId, StatusBooking.REJECTED);
+                bookings = bookingRepository.findByBookerIdAndStatusOrderByEndDesc(userId, StatusBooking.REJECTED, page);
                 break;
             default:
                 throw new MyBookingNotFoundStatusException();
@@ -163,7 +169,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoGiven> getAllBookingsItemsUser(Integer userId, String state) {
+    public List<BookingDtoGiven> getAllBookingsItemsUser(Integer userId, String state, Integer from, Integer size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new MyNotFoundException("Пользователь не найден ID: " + userId));
 
@@ -172,25 +178,27 @@ public class BookingServiceImpl implements BookingService {
         state = state.toUpperCase().trim();
         LocalDateTime now = LocalDateTime.now();
 
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+
         switch (state) {
             case "ALL":
-                bookings = bookingRepository.findByItem_Owner_OrderByStartDesc(userId);
+                bookings = bookingRepository.findByItem_Owner_OrderByStartDesc(userId, page);
                 break;
             case "CURRENT":
                 bookings = bookingRepository.findByItem_Owner_AndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId, now,
-                        now);
+                        now, page);
                 break;
             case "PAST":
-                bookings = bookingRepository.findByItem_OwnerAndEndIsBeforeOrderByStartDesc(userId, now);
+                bookings = bookingRepository.findByItem_OwnerAndEndIsBeforeOrderByStartDesc(userId, now, page);
                 break;
             case "FUTURE":
-                bookings = bookingRepository.findByItem_OwnerAndStartIsAfterOrderByStartDesc(userId, now);
+                bookings = bookingRepository.findByItem_OwnerAndStartIsAfterOrderByStartDesc(userId, now, page);
                 break;
             case "WAITING":
-                bookings = bookingRepository.findByItem_OwnerAndStatusOrderByStartDesc(userId, StatusBooking.WAITING);
+                bookings = bookingRepository.findByItem_OwnerAndStatusOrderByStartDesc(userId, StatusBooking.WAITING, page);
                 break;
             case "REJECTED":
-                bookings = bookingRepository.findByItem_OwnerAndStatusOrderByStartDesc(userId, StatusBooking.REJECTED);
+                bookings = bookingRepository.findByItem_OwnerAndStatusOrderByStartDesc(userId, StatusBooking.REJECTED, page);
                 break;
             default:
                 throw new MyBookingNotFoundStatusException();

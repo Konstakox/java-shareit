@@ -1,15 +1,15 @@
 package ru.practicum.shareit.item;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
-@RequiredArgsConstructor
+@UtilityClass
 public class CommentMapper {
 
-    public static CommentDto toCommentDto(Comment comment) {
+    public CommentDto toCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
                 .text(comment.getText())
@@ -18,7 +18,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public static Comment toComment(User user, Item item, CommentDto commentDto) {
+    public Comment toComment(User user, Item item, CommentDto commentDto) {
         return Comment.builder()
                 .text(commentDto.getText())
                 .item(item)

@@ -58,6 +58,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.coodex.concrete</groupId>
+            <artifactId>concrete-serializer-jsonb-jdk8</artifactId>
+            <version>0.5.1</version>
+        </dependency>
+		<dependency>
+			<groupId>org.coodex.concrete</groupId>
+			<artifactId>concrete-serializer-jsonb-jdk8</artifactId>
+			<version>0.5.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

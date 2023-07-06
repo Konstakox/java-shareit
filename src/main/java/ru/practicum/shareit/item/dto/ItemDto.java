@@ -14,6 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class ItemDto {
+    private BookingDtoGivenWithBookerId nextBooking;
+    private BookingDtoGivenWithBookerId lastBooking;
+    private List<CommentDto> comments;
     @Null(groups = MarkerItemDto.OnCreate.class)
     private Integer id;
     @NotBlank(groups = MarkerItemDto.OnCreate.class)
@@ -22,10 +25,7 @@ public class ItemDto {
     private String description;
     @NotNull(groups = MarkerItemDto.OnCreate.class)
     private Boolean available;
-    private Integer request;
-    BookingDtoGivenWithBookerId nextBooking;
-    BookingDtoGivenWithBookerId lastBooking;
-    List<CommentDto> comments;
+    private Integer requestId;
 }
 
 

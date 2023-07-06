@@ -29,43 +29,43 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ItemIntegrationTests {
     @Autowired
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
     @Autowired
-    BookingRepository bookingRepository;
+    private BookingRepository bookingRepository;
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    User user1 = User.builder()
+    private final User user1 = User.builder()
             .name("name")
             .email("email@email.ru")
             .build();
-    User author = User.builder()
+    private final User author = User.builder()
             .name("nameauthor")
             .email("emailauthor@email.ru")
             .build();
-    Item item = Item.builder()
+    private final Item item = Item.builder()
             .name("name")
             .description("description")
             .available(true)
             .owner(1)
             .build();
-    Comment comment = Comment.builder()
+    private final Comment comment = Comment.builder()
             .text("textcomment")
             .item(item)
             .author(author)
             .build();
-    Booking bookingLast = Booking.builder()
+    private final Booking bookingLast = Booking.builder()
             .status(StatusBooking.APPROVED)
             .start(LocalDateTime.of(2000, 1, 1, 1, 1, 1))
             .end(LocalDateTime.of(2001, 2, 2, 2, 2, 2))
             .item(item)
             .booker(user1)
             .build();
-    Booking bookingNext = Booking.builder()
+    private final Booking bookingNext = Booking.builder()
             .status(StatusBooking.APPROVED)
             .start(LocalDateTime.of(3000, 1, 1, 1, 1, 1))
             .end(LocalDateTime.of(3001, 2, 2, 2, 2, 2))

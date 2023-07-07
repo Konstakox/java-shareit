@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDtoGiven;
 import ru.practicum.shareit.booking.dto.BookingDtoIncoming;
-import ru.practicum.shareit.exception.MyUnavailableException;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -82,48 +81,6 @@ class BookingControllerTest {
 
         assertEquals(objectMapper.writeValueAsString(bookingDtoGiven), result);
     }
-
-//    @SneakyThrows
-//    @Test
-//    void addBooking_notStart_thenResponseMyUnavailableExceptionBadRequest() { //addBooking_availableFalse_MyNotFoundExceptionStatusNotFound
-//        BookingDtoIncoming bookingDtoIncomingNotStart = bookingDtoIncoming;
-//        bookingDtoIncomingNotStart.setStart(null);
-//        when(bookingService.addBooking(userId, bookingDtoIncomingNotStart)).thenThrow(MyUnavailableException.class);
-//
-//        String result = mockMvc.perform(post("/bookings").header(USER_ID, userId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsBytes(bookingDtoIncomingNotStart)))
-//                .andExpect(status().isBadRequest())
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString();
-//    }
-//
-//    @SneakyThrows
-//    @Test
-//    void addBooking_notEnd_thenResponseMyUnavailableExceptionBadRequest() { //addBooking_availableFalse_MyNotFoundExceptionStatusNotFound
-//        BookingDtoIncoming bookingDtoIncomingNotStart = bookingDtoIncoming;
-//        bookingDtoIncomingNotStart.setEnd(null);
-//        when(bookingService.addBooking(userId, bookingDtoIncomingNotStart)).thenThrow(MyUnavailableException.class);
-//
-//        mockMvc.perform(post("/bookings").header(USER_ID, userId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsBytes(bookingDtoIncomingNotStart)))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @SneakyThrows
-//    @Test
-//    void addBooking_notItemId_thenResponseMyUnavailableExceptionBadRequest() { //addBooking_availableFalse_MyNotFoundExceptionStatusNotFound
-//        BookingDtoIncoming bookingDtoIncomingNotStart = bookingDtoIncoming;
-//        bookingDtoIncomingNotStart.setItemId(null);
-//        when(bookingService.addBooking(userId, bookingDtoIncomingNotStart)).thenThrow(MyUnavailableException.class);
-//
-//        mockMvc.perform(post("/bookings").header(USER_ID, userId)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsBytes(bookingDtoIncomingNotStart)))
-//                .andExpect(status().isBadRequest());
-//    }
 
     @SneakyThrows
     @Test

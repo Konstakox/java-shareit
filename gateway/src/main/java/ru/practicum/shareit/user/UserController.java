@@ -9,7 +9,6 @@ import ru.practicum.shareit.user.dto.MarkerUserDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable @Positive Integer userId,
-                              @RequestBody @Validated(MarkerUserDto.OnUpdate.class) UserDto userDto) {
+                                             @RequestBody @Validated(MarkerUserDto.OnUpdate.class) UserDto userDto) {
         log.info("Запрос изменения пользователя с id {}, изменение {}", userId, userDto);
         return userClient.updateUser(userId, userDto);
     }

@@ -16,7 +16,6 @@ public class ItemRequestDtoWithItem {
     private Integer id;
     private String description;
     private User requestor;
-    //    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime created;
     private List<ItemDto> items;
 }

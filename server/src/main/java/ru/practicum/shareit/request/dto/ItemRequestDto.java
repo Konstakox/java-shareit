@@ -14,6 +14,5 @@ public class ItemRequestDto {
     private Integer id;
     private String description;
     private User requestor;
-    //    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime created;
 }

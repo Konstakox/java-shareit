@@ -24,4 +24,11 @@ public class GlobalExceptionHandler {
         log.error(exception.getMessage(), exception);
         return Map.of("error", exception.getMessage());
     }
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleThrowableException(Throwable exception) {
+        log.error(exception.getMessage(), exception);
+        return Map.of("error", exception.getMessage());
+    }
 }

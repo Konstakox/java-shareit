@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 public class ItemRequestDto {
     private Integer id;
 
-    @NotBlank
+    @NotBlank(message = "Нет описания")
     private String description;
     private User requestor;
-    @FutureOrPresent
+    @FutureOrPresent(message = "Не правильное время")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime created;
 }

@@ -7,6 +7,7 @@ import ru.practicum.shareit.booking.StatusBooking;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -15,15 +16,15 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 public class BookingDtoIncoming {
 
-    @NotNull
-    @FutureOrPresent
+    @NotBlank(message = "Должно быть время начала бронирования")
+    @FutureOrPresent(message = "Невозможно забронировать вещь в прошлом.")
     private LocalDateTime start;
 
-    @NotNull
-    @Future
+    @NotBlank(message = "Должно быть время конеца бронирования")
+    @Future(message = "Время окончания бронирования должно быть после его начала")
     private LocalDateTime end;
 
-    @NotNull
+    @NotNull(message = "Должна быть указана вещь")
     private Integer itemId;
 
     private StatusBooking status;

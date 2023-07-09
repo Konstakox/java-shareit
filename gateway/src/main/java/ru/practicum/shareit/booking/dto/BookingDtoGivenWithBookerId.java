@@ -16,23 +16,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class BookingDtoGivenWithBookerId {
-    @NotNull
+    @NotNull(message = "Необходимо указать id")
     private Integer id;
 
-    @NotBlank
-    @FutureOrPresent
+    @NotBlank(message = "Должно быть время начала бронирования")
+    @FutureOrPresent(message = "Невозможно забронировать вещь в прошлом.")
     private LocalDateTime start;
 
-    @NotBlank
-    @Future
+    @NotBlank(message = "Должно быть время конеца бронирования")
+    @Future(message = "Время окончания бронирования должно быть после его начала")
     private LocalDateTime end;
 
-    @NotNull
+    @NotNull(message = "Должна быть указана вещь")
     private ItemDto item;
 
-    @NotNull
+    @NotNull(message = "Должен быть указан бронирующий")
     private Integer bookerId;
 
-    @NotNull
+    @NotNull(message = "Не указан статус бронирования")
     private StatusBooking status;
 }

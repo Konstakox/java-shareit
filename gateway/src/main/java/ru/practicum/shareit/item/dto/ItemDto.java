@@ -17,13 +17,13 @@ public class ItemDto {
     private BookingDtoGivenWithBookerId nextBooking;
     private BookingDtoGivenWithBookerId lastBooking;
     private List<CommentDto> comments;
-    @Null(groups = MarkerItemDto.OnCreate.class)
+    @Null(groups = MarkerItemDto.OnCreate.class, message = "Ид пока не нужен")
     private Integer id;
-    @NotBlank(groups = MarkerItemDto.OnCreate.class)
+    @NotBlank(groups = MarkerItemDto.OnCreate.class, message = "Нет имени")
     private String name;
-    @NotBlank(groups = MarkerItemDto.OnCreate.class)
+    @NotBlank(groups = MarkerItemDto.OnCreate.class, message = "Нет описания")
     private String description;
-    @NotNull(groups = MarkerItemDto.OnCreate.class)
+    @NotNull(groups = MarkerItemDto.OnCreate.class, message = "Нет статуса вещи")
     private Boolean available;
     private Integer requestId;
 }

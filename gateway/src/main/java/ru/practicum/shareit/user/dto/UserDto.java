@@ -10,12 +10,12 @@ import javax.validation.constraints.Null;
 @Data
 @Builder
 public class UserDto {
-    @Null(groups = MarkerUserDto.OnCreate.class)
+    @Null(groups = MarkerUserDto.OnCreate.class, message = "Пока не нужен ИД")
     private Integer id;
-    @NotBlank(groups = MarkerUserDto.OnCreate.class)
+    @NotBlank(groups = MarkerUserDto.OnCreate.class, message = "Нет имени")
     private String name;
-    @Email(groups = MarkerUserDto.OnCreate.class)
-    @Email(groups = MarkerUserDto.OnUpdate.class)
-    @NotBlank(groups = MarkerUserDto.OnCreate.class)
+    @Email(groups = MarkerUserDto.OnCreate.class, message = "Некорректный емайл")
+    @Email(groups = MarkerUserDto.OnUpdate.class, message = "Некорректный емайл")
+    @NotBlank(groups = MarkerUserDto.OnCreate.class, message = "Не указан емайл")
     private String email;
 }

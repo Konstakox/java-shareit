@@ -19,7 +19,7 @@ public class ItemRequestDtoWithItem {
     private Integer id;
     private String description;
     private User requestor;
-    @FutureOrPresent
+    @FutureOrPresent(message = "Не правильное время")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime created;
     private List<ItemDto> items;

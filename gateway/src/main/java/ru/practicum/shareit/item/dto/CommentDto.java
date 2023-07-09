@@ -14,19 +14,19 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class CommentDto {
-    @Null(groups = MarkerCommentDto.OnCreate.class)
+    @Null(groups = MarkerCommentDto.OnCreate.class, message = "Ид пока не нужен")
     private Integer id;
 
-    @NotBlank(groups = MarkerCommentDto.OnCreate.class)
-    @Size(groups = MarkerCommentDto.OnCreate.class, min = 2, max = 511)
+    @NotBlank(groups = MarkerCommentDto.OnCreate.class, message = "Нет описания")
+    @Size(groups = MarkerCommentDto.OnCreate.class, min = 2, max = 511, message = "Некорректное значение символов")
     private String text;
 
-    @NotNull
+    @NotNull(message = "Должна быть вещь")
     private Item item;
 
-    @Null(groups = MarkerCommentDto.OnCreate.class)
+    @Null(groups = MarkerCommentDto.OnCreate.class, message = "Нет автора")
     private String authorName;
 
-    @Null(groups = MarkerCommentDto.OnCreate.class)
+    @Null(groups = MarkerCommentDto.OnCreate.class, message = "Незафиксированно время")
     private LocalDateTime created;
 }

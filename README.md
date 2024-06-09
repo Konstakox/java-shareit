@@ -37,3 +37,5 @@
 <li>[GET] /bookings?state={state} - получение списка всех бронирований текущего пользователя. Параметр state необязательный и по умолчанию равен ALL. Также он может принимать значения CURRENT, PAST, FUTURE, WAITING, REJECTED;</li>
 <li>[GET] /bookings/owner?state={state} - получение списка бронирований для всех вещей текущего пользователя;</li>
 </ul></p>
+<h3>Схема базы данных</h3>
+<p><img src="https://github.com/Konstakox/java-shareit/postgres_shareit.png"></p>

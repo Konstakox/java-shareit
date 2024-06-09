@@ -38,4 +38,4 @@
 <li>[GET] /bookings/owner?state={state} - получение списка бронирований для всех вещей текущего пользователя;</li>
 </ul></p>
 <h3>Схема базы данных</h3>
-<p><img src="https://github.com/Konstakox/java-shareit/postgres_shareit.png"></p>
+<p><img src="https://github.com/Konstakox/java-shareit/blob/main/postgres_shareit.png"/></p>

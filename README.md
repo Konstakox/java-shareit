@@ -39,3 +39,5 @@
 </ul></p>
 <h3>Схема базы данных</h3>
 <p><img src="https://github.com/Konstakox/java-shareit/blob/main/postgres_shareit.png"/></p>
+<h3>Запуск</h3>
+<p>Запуск приложения настроен с помощью контейнеров через Docker. Приложения shareIt-server, shareIt-gateway и база данных PostgreSQL запускаются в отдельном Docker-контейнере каждый. Их взаимодействие настроено через Docker Compose.</p>
